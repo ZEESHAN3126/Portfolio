@@ -1,26 +1,289 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================================
+   ZEESHAN+ Design Token System
+   PRD Reference: §9 Color System · §10 Typography · §11 Spacing · §8 Motion
+   Tailwind v4: @theme variables become bg-*, text-*, border-* utilities.
+   ============================================================================ */
+
+/* ─── Tailwind Theme Extension ───────────────────────────────────────────────
+   Variables defined here are available as Tailwind utility classes.
+   --color-accent  →  bg-accent, text-accent, border-accent, ring-accent, etc.
+   --font-sans     →  font-sans
+   These are additive — existing Tailwind utilities are preserved.
+   ─────────────────────────────────────────────────────────────────────────── */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Fonts — wire up next/font CSS variables (set on <body> by lib/fonts.ts) */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "Cascadia Code", monospace;
+
+  /* ─── Brand Palette — PRD §9.1 ─────────────────────────────────────────── */
+  /* Primary accent — Deep Crimson Red */
+  --color-accent:        #C8102E;
+  --color-accent-hover:  #A50D26;
+
+  /* Accessibility — Electric Blue for focus states ONLY */
+  --color-focus:         #3B82F6;
+
+  /* Surface / Background scale */
+  --color-bg:            #141414;
+  --color-surface:       #1F1F1F;
+  --color-surface-hover: #2A2A2A;
+
+  /* Borders */
+  --color-border:        #2E2E2E;
+  --color-border-strong: #404040;
+
+  /* Text scale */
+  --color-text-primary:   #FFFFFF;
+  --color-text-secondary: #A3A3A3;
+  --color-text-muted:     #6B6B6B;
 }
 
-@media (prefers-color-scheme: dark) {
+/* ─── CSS Custom Properties ──────────────────────────────────────────────────
+   Non-utility design tokens: motion, shadows, fluid typography, overlays.
+   These are consumed via var() in components and the utility classes below.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Motion — PRD §8.2 Animation Tiers ──────────────────────────────────── */
+  --duration-micro:     150ms;   /* Button hover, badge pulse, link underline  */
+  --duration-standard:  500ms;   /* Element entrance, card hover, modal open   */
+  --duration-cinematic: 1000ms;  /* Section reveals, text reveals, line draws  */
+  --duration-ambient:   3000ms;  /* Looping background gradients, float anim   */
+
+  /* Cinematic ease-out — PRD §8.4. Use for ALL entrances. */
+  --ease-cinematic: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out:       cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out:    cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Fluid Typography Scale — PRD §10.2 ─────────────────────────────────── */
+  /* Used via .text-display-xl etc. utility classes defined below. */
+  --text-display-xl:  clamp(3rem, 8vw, 7rem);       /* Hero name, Splash       */
+  --text-display-lg:  clamp(2.25rem, 5vw, 4rem);    /* Section heroes          */
+  --text-heading-xl:  clamp(1.75rem, 3vw, 2.5rem);  /* Section headings        */
+  --text-heading-lg:  clamp(1.375rem, 2vw, 1.875rem); /* Card titles           */
+  --text-heading-md:  1.25rem;                       /* Feature labels, roles   */
+  --text-body-lg:     1.125rem;                      /* Primary body            */
+  --text-body:        1rem;                          /* Standard body           */
+  --text-small:       0.875rem;                      /* Meta, captions, badges  */
+  --text-xs:          0.75rem;                       /* Tag labels, footnotes   */
+  --text-mono:        0.875rem;                      /* Code, tech labels       */
+
+  /* ── Line Heights — PRD §10.2 ───────────────────────────────────────────── */
+  --leading-display: 1.0;   /* Display / hero text                             */
+  --leading-heading: 1.2;   /* Section headings                                */
+  --leading-body:    1.7;   /* Body paragraphs — optimised for readability     */
+
+  /* ── Letter Spacing — PRD §10.3 ─────────────────────────────────────────── */
+  --tracking-tight:  -0.02em; /* Display text — tighter, more cinematic        */
+  --tracking-normal:  0em;    /* Body text                                     */
+  --tracking-wide:    0.05em; /* Uppercase labels, section tags                */
+
+  /* ── Overlay Colours ─────────────────────────────────────────────────────── */
+  --white-05:  rgba(255, 255, 255, 0.05);
+  --white-10:  rgba(255, 255, 255, 0.10);
+  --white-20:  rgba(255, 255, 255, 0.20);
+  --black-50:  rgba(0, 0, 0, 0.5);
+  --black-80:  rgba(0, 0, 0, 0.8);
+  --accent-10: rgba(200, 16, 46, 0.10);  /* Muted crimson bg */
+  --accent-20: rgba(200, 16, 46, 0.20);  /* Medium crimson bg */
+  --accent-30: rgba(200, 16, 46, 0.30);  /* Crimson selection/glow border */
+
+  /* ── Shadows ─────────────────────────────────────────────────────────────── */
+  --shadow-card:              0 4px 24px rgba(0, 0, 0, 0.4);
+  --shadow-card-hover:        0 8px 40px rgba(0, 0, 0, 0.6);
+  --shadow-accent-glow:       0 0 30px rgba(200, 16, 46, 0.12);
+  --shadow-accent-glow-strong:0 0 60px rgba(200, 16, 46, 0.20);
+  --shadow-navbar:            0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* ── Gradients — PRD §9.3 ────────────────────────────────────────────────── */
+  --gradient-hero:
+    radial-gradient(ellipse at 20% 50%, rgba(200, 16, 46, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+    #141414;
+  --gradient-card:            linear-gradient(135deg, #1F1F1F 0%, #181818 100%);
+  --gradient-divider:
+    linear-gradient(to bottom, #141414 0%, transparent 50%, #141414 100%);
+  --gradient-fade-right:
+    linear-gradient(to right, transparent 0%, #141414 100%);
+  --gradient-fade-left:
+    linear-gradient(to left, transparent 0%, #141414 100%);
+
+  /* ── Layout ──────────────────────────────────────────────────────────────── */
+  --navbar-height:        64px;  /* Desktop */
+  --navbar-height-mobile: 56px;  /* Mobile  */
+  --sidenav-width:        40px;
+  --container-max:        1280px; /* max-w-screen-xl */
+}
+
+/* ============================================================================
+   Reduced Motion — PRD §8 Law 4 & §12.2
+   CSS duration vars collapse to 0. Framer Motion respects useReducedMotion().
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --duration-micro:     0ms;
+    --duration-standard:  0ms;
+    --duration-cinematic: 0ms;
+    --duration-ambient:   0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration:       0.01ms !important;
+    animation-iteration-count: 1     !important;
+    transition-duration:      0.01ms !important;
+    scroll-behavior:          auto   !important;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================================
+   Base Reset — PRD §14 (targeted, not a full reset; Tailwind preflight handles the rest)
+   ============================================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
+
+html {
+  scroll-behavior: smooth;
+  /* Prevent font size inflation on orientation change (iOS) */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Ensure dark background during page load before body paint */
+  background-color: #141414;
+}
+
+body {
+  background-color: #141414;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  line-height: var(--leading-body);
+  /* GPU-accelerated font rendering — crisp on dark backgrounds */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent horizontal scroll from parallax / overflow elements */
+  overflow-x: hidden;
+}
+
+/* ── Focus — PRD §12.2 ───────────────────────────────────────────────────────
+   Electric Blue (#3B82F6) EXCLUSIVELY for focus states.
+   Visible only for keyboard navigation, invisible for mouse users.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ── Text Selection ──────────────────────────────────────────────────────────*/
+::selection {
+  background-color: var(--accent-30);
+  color: #FFFFFF;
+}
+
+/* ── Custom Scrollbar ────────────────────────────────────────────────────────*/
+::-webkit-scrollbar        { width: 5px; }
+::-webkit-scrollbar-track  { background: #141414; }
+::-webkit-scrollbar-thumb  { background: #2E2E2E; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #404040; }
+
+/* ============================================================================
+   Skip Link — PRD §12.2 (First focusable element on every page)
+   ============================================================================ */
+
+.skip-link {
+  position: fixed;
+  top: -120%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.625rem 1.25rem;
+  background-color: #C8102E;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0 0 0.5rem 0.5rem;
+  text-decoration: none;
+  /* Only animate if motion is allowed */
+  transition: top var(--duration-micro) var(--ease-out);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================================================
+   Layout Utilities — PRD §11 (supplement Tailwind; don't duplicate)
+   ============================================================================ */
+
+/* Responsive container — matches PRD §11.3 padding spec */
+.container-main {
+  width: 100%;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: 1.25rem; /* 20px — mobile */
+}
+
+@media (min-width: 768px)  { .container-main { padding-inline: 2rem;  } } /* 32px  */
+@media (min-width: 1024px) { .container-main { padding-inline: 4rem;  } } /* 64px  */
+@media (min-width: 1536px) { .container-main { padding-inline: 6rem;  } } /* 96px  */
+
+/* Glassmorphism surface — used by Navbar on scroll */
+.glass {
+  background-color:     rgba(20, 20, 20, 0.85);
+  backdrop-filter:      blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ============================================================================
+   Fluid Typography Classes — PRD §10.2
+   Use these where Tailwind's fixed scale is insufficient for cinematic sizing.
+   ============================================================================ */
+
+.text-display-xl {
+  font-size:      var(--text-display-xl);
+  line-height:    var(--leading-display);
+  letter-spacing: var(--tracking-tight);
+  font-weight:    700;
+}
+
+.text-display-lg {
+  font-size:      var(--text-display-lg);
+  line-height:    var(--leading-display);
+  letter-spacing: var(--tracking-tight);
+  font-weight:    700;
+}
+
+.text-heading-xl {
+  font-size:   var(--text-heading-xl);
+  line-height: var(--leading-heading);
+  font-weight: 600;
+}
+
+.text-heading-lg {
+  font-size:   var(--text-heading-lg);
+  line-height: var(--leading-heading);
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Section Utility — PRD §11.2 (vertical padding by breakpoint)
+   ============================================================================ */
+
+.section-padding {
+  padding-block: 5rem;   /* 80px — mobile */
+}
+
+@media (min-width: 768px)  { .section-padding { padding-block: 6rem;  } } /* 96px  */
+@media (min-width: 1024px) { .section-padding { padding-block: 8rem;  } } /* 128px */
