@@ -2,8 +2,7 @@ export const contact = {
   title: "LET'S BUILD",
   highlight: "PRODUCTS PEOPLE REMEMBER.",
 
-  description:
-    "Whether you're hiring, building a startup, looking for a Product Manager, or just want to connect—I'd love to hear from you.",
+  description: `Whether you're hiring, building a startup, looking for a Product Manager, or just want to connect—I'd love to hear from you.`,
 
   availability: "Currently Building",
   project: "🚀 Stylinger",
