@@ -11,7 +11,7 @@ export default function ContactContent() {
       <div className="max-w-3xl">
 
         <p className="text-sm uppercase tracking-[0.35em] text-[#E50914]">
-          LET'S TALK
+          LET&apos;S TALK
         </p>
 
         <h2 className="mt-5 text-6xl font-black leading-none text-white">
@@ -31,14 +31,12 @@ export default function ContactContent() {
       </div>
 
       <div className="mt-14 grid gap-5 md:grid-cols-2">
-
         {contact.socials.map((item) => (
           <SocialButton
             key={item.title}
             {...item}
           />
         ))}
-
       </div>
 
       <AvailabilityBadge
