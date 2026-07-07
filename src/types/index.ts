@@ -6,3 +6,20 @@ export type { WorkExperience } from "./experience";
 export type { Skill, SkillGroup, SkillLevel } from "./skill";
 export type { Achievement } from "./achievement";
 export type { SocialLink } from "./social";
+
+// ── Project Engine (single source of truth) ───────────────────────────────────
+export type {
+  ProjectDetail,
+  ProjectStatus as DetailStatus,
+  GalleryImage,
+  TimelineMilestone,
+  MilestoneStatus,
+  ProjectDocument,
+  DocumentType,
+  ProjectAchievement,
+  StoryModeData,
+  StorySlide,
+  SlideType,
+  ProjectLinks,
+  RelatedProjectRef,
+} from "./project-detail";

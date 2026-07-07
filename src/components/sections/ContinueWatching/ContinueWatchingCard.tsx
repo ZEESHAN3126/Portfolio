@@ -9,6 +9,8 @@ interface ContinueWatchingCardProps {
   category: string;
   progress: number;
   image: string;
+  /** Called when the card (or its inner Resume button) is clicked. */
+  onSelect?: () => void;
 }
 
 export default function ContinueWatchingCard({
@@ -17,6 +19,7 @@ export default function ContinueWatchingCard({
   category,
   progress,
   image,
+  onSelect,
 }: ContinueWatchingCardProps) {
   return (
     <motion.article
@@ -34,6 +37,7 @@ export default function ContinueWatchingCard({
         },
       }}
       transition={{ duration: 0.3 }}
+      onClick={onSelect}
       className="
         group
         relative
@@ -125,6 +129,12 @@ export default function ContinueWatchingCard({
           <div className="flex gap-3">
 
             <button
+              onClick={(e) => {
+                // Prevent the click from bubbling to the article and
+                // double-invoking onSelect. Future per-button logic goes here.
+                e.stopPropagation();
+                onSelect?.();
+              }}
               className="
                 flex
                 items-center
@@ -142,6 +152,11 @@ export default function ContinueWatchingCard({
             </button>
 
             <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect?.();
+              }}
+              aria-label="More information"
               className="
                 rounded-full
                 border
