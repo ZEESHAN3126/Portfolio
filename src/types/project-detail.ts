@@ -179,7 +179,7 @@ export interface ProjectDetail {
    * When defined → StoryPreview card is shown in the overlay.
    * When defined with slides → StoryMode can be launched.
    */
-  storyMode: StoryModeData;
+  storyMode?: StoryModeData;
 
   // ── Timeline ──────────────────────────────────────────────────────────────
   timeline?: TimelineMilestone[];

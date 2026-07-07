@@ -77,7 +77,7 @@ export function StoryPreview({ data, onWatchStory }: StoryPreviewProps) {
 
   {/* Headline */}
 <h4 className="mb-3 text-2xl font-black text-white">
-  Watch how I'm building Stylinger.
+  Watch how I&apos;m building Stylinger.
 </h4>
 
 <p className="mb-8 max-w-md text-base leading-relaxed text-white/60">

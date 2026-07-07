@@ -74,28 +74,22 @@ const slideTransition = {
 
 export default function StoryMode({ projectId }: StoryModeProps) {
 
-  const project = projectDetails[projectId];
-
-  if (!project) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-black text-white">
-        Project not found.
-      </div>
-    );
-  }
-
-  const projectTitle = project.title;
-  const story = project.storyMode;
-
-
-
+  // Hooks MUST come first
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState(0); // 1=forward, -1=backward
+  const [direction, setDirection] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const { slides } = story;
 
-  const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex < slides.length - 1;
+  const project = projectDetails[projectId];
+   
+  
+  const story = project?.storyMode;
+const projectTitle = project?.title ?? "Unknown Project";
+const slides = story?.slides ?? [];
+
+const hasPrev = currentIndex > 0;
+const hasNext = currentIndex < slides.length - 1;
+
+ 
 
   // ── Navigation helpers ─────────────────────────────────────────────────────
   const goNext = useCallback(() => {
@@ -137,6 +131,21 @@ export default function StoryMode({ projectId }: StoryModeProps) {
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  if (!project) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-black text-white">
+      Project not found.
+    </div>
+  );
+}
+
+if (!story) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-black text-white">
+      Story not found.
+    </div>
+  );
+}
   // ── Render ────────────────────────────────────────────────────────────────
   return (
     <motion.div
